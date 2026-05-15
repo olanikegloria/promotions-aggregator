@@ -1,0 +1,9 @@
+node_modules
+.env
+*.db
+*.db-journal
+dist
+.next
+data/snapshots
+BUILD_GUIDE.md
+takehome-brief.pdf
