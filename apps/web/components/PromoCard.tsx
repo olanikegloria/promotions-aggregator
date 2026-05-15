@@ -1,3 +1,5 @@
+'use client'
+
 import type { PromotionWithBrand } from '@promo/shared'
 import Image from 'next/image'
 
