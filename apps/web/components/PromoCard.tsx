@@ -8,12 +8,18 @@ interface Props {
 }
 
 export function PromoCard({ promo }: Props) {
-  const endDate = promo.endDate
-    ? new Date(promo.endDate).toLocaleDateString('en-US', {
-        month: 'short',
-        day: 'numeric',
-        year: 'numeric',
-      })
+  const endDateLabel = promo.endDate
+    ? (() => {
+        const d = new Date(promo.endDate)
+        if (Number.isNaN(d.getTime())) {
+          return promo.endDate
+        }
+        return `Ends ${d.toLocaleDateString('en-US', {
+          month: 'short',
+          day: 'numeric',
+          year: 'numeric',
+        })}`
+      })()
     : null
 
   return (
@@ -24,6 +30,7 @@ export function PromoCard({ promo }: Props) {
             src={promo.imageUrl}
             alt={promo.name}
             fill
+            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
             className="object-cover"
             onError={(e) => { (e.target as HTMLImageElement).style.display = 'none' }}
           />
@@ -40,8 +47,8 @@ export function PromoCard({ promo }: Props) {
           <p className="text-xs text-gray-600 line-clamp-2 mb-3">{promo.description}</p>
         )}
         <div className="flex items-center justify-between">
-          {endDate && (
-            <span className="text-xs text-gray-500">Ends {endDate}</span>
+          {endDateLabel && (
+            <span className="text-xs text-gray-500">{endDateLabel}</span>
           )}
           <a
             href={promo.canonicalUrl}

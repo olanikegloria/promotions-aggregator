@@ -14,7 +14,7 @@ exposes a typed REST API, and renders a filterable UI with group-by-brand view.
 git clone https://github.com/olanikegloria/promotions-aggregator.git
 cd promotions-aggregator
 pnpm install
-npx playwright install chromium
+pnpm --filter api exec playwright install chromium
 cp .env.example .env
 pnpm --filter @promo/shared build
 ```
@@ -65,3 +65,5 @@ See `.env.example`.
 - No automated test suite (would add Vitest for scraper parsing logic first)
 - POST /scrape is synchronous — expect a long HTTP timeout (60–120s)
 - Detail click-through pages not implemented (bonus feature)
+- `pnpm install` must compile native deps (`better-sqlite3`, etc.); the repo root `package.json` lists `pnpm.onlyBuiltDependencies` so installs are non-interactive. If you remove that block, run `pnpm approve-builds` when prompted.
+- Listing scrape stores human-readable end-date text (e.g. "Ends Today"), not ISO dates — API `startDate`/`endDate` filters use string comparison and work best with `YYYY-MM-DD` values when data supports it.
