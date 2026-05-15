@@ -31,6 +31,12 @@ SQLite via Drizzle ORM. Chosen over Postgres to remove the Docker dependency and
 setup to one command. The Drizzle schema and query API are identical for Postgres —
 swapping requires only changing the connection string and one adapter import.
 
+## Search implementation
+The `search` query parameter on `GET /promotions` runs a SQL OR across three columns:
+`promotions.name`, `promotions.description`, and `brands.name`. This means searching
+"bath" returns all Bath & Body Works promotions even if the promotion title doesn't
+contain "bath". Implemented with Drizzle's `or()` + `like()` helpers.
+
 ## POST /scrape — sync vs async
 Synchronous. The scraper runs and the endpoint returns when done, with a summary
 { scraped, failed, durationMs }. An async queue would be over-engineered for a
@@ -40,3 +46,7 @@ single-portal MVP. The 60s+ scrape timeout is on the client, per NFR3.
 - Docker / docker-compose (documented above — trivial to add)
 - Formal test suite (would add Vitest unit tests for scraper parsing logic first)
 - Detail click-through page (bonus, not required)
+- Brand enrichment (store directory pages not scraped — websiteUrl, hours, and
+  socialLinks are all null for every brand). The scraper skeleton has the loop and
+  try/catch structure in place; the missing piece is navigating to each brand's
+  directory page and extracting the fields. Would be the next thing to implement.

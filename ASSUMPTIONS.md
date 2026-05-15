@@ -30,6 +30,22 @@ Chose SQLite to eliminate Docker as a dependency. The Drizzle ORM schema and que
 are identical for Postgres. Swapping requires changing DATABASE_URL and one adapter
 import in apps/api/src/db/index.ts.
 
+## End date format
+The sales page returns human-readable date strings ("Ends Today", "Ends Tomorrow",
+"Ends in 3 days") rather than ISO dates. These are stored as-is in `endDate`;
+`startDate` is always null as the listing page does not expose a start date.
+Consequence: the `startDate`/`endDate` query filters on `GET /promotions` use SQL
+string comparison and will not match the current dataset. The "Ends soon" UI badge
+handles this by attempting `Date.parse()` and only rendering when the result is a
+valid number.
+
+## Brand enrichment not implemented
+The scraper loop for enriching brands with `websiteUrl`, `hours`, and `socialLinks`
+from the store directory is scaffolded but not completed. All brands currently have
+`websiteUrl: null`, `hours: null`, and `socialLinks` with all-null values. This is
+documented in DESIGN.md under "What I cut for time." The BrandSection UI component
+is designed to gracefully show nothing when these fields are null.
+
 ## Site structure
 Scraped on 2026-05-15. If the site changes structure between scraping
 and review, the snapshots in data/snapshots/ show what was actually returned.

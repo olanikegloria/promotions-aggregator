@@ -59,6 +59,49 @@ See `.env.example`.
 | DATABASE_URL | ./data/promotions.db | SQLite file path |
 | SCRAPER_DELAY_MS | 1000 | Delay between scraper requests (ms) |
 
+## UI features
+
+- **Search** — keyword search across promotion name, description, and brand name simultaneously. Debounced 300ms. Active search shown as a dismissible chip below the filter bar.
+- **Date filters** — start and end date inputs; active filters shown as dismissible chips.
+- **Sticky filter bar** — filters stay visible while scrolling through results.
+- **Group by brand** — toggle switches between flat card grid and brand-section view (each brand section shows name, promotion count, website, hours, and social links).
+- **Pagination** — page-number controls with ±2 window around the current page.
+- **"Ends soon" badge** — promotion cards display an orange badge when the end date is within 7 days (requires scraped end date to be a parseable date string).
+- **Loading skeletons** — animated placeholder cards shown while data is fetching.
+
+## Verification
+
+After setup and running `curl -X POST http://localhost:4000/scrape`:
+
+```bash
+# Health check
+curl http://localhost:4000/health
+# → {"status":"ok"}
+
+# Search matches name, description, AND brand name
+curl "http://localhost:4000/promotions?search=bath"
+# → 6 results — all Bath & Body Works promotions matched via brand name
+
+curl "http://localhost:4000/promotions?search=off"
+# → promotions whose name or description contains "off"
+
+# Pagination
+curl "http://localhost:4000/promotions?page=1&pageSize=3"
+# → { data: [...], total: 39, page: 1, pageSize: 3, totalPages: 13 }
+
+# Single record with brand nested
+curl "http://localhost:4000/promotions/$(curl -s 'http://localhost:4000/promotions?pageSize=1' | node -e "process.stdout.write(JSON.parse(require('fs').readFileSync('/dev/stdin','utf8')).data[0].id)")"
+# → { id, name, brand: { name, ... }, canonicalUrl, ... }
+
+# Brands with counts
+curl http://localhost:4000/brands
+# → array of 15 brands each with promotionCount > 0
+
+# Validation
+curl "http://localhost:4000/promotions?page=abc"
+# → 400 { "error": "Invalid query parameters", "issues": [...] }
+```
+
 ## Known limitations
 
 - No Docker setup (see DESIGN.md — trivial to add, SQLite makes it less necessary)
