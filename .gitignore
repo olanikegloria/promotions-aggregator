@@ -2,8 +2,12 @@ node_modules
 .env
 *.db
 *.db-journal
+*.db-shm
+*.db-wal
 dist
 .next
 data/snapshots
+apps/api/data/
 BUILD_GUIDE.md
 takehome-brief.pdf
+CURSOR_PROMPTS.md
