@@ -1,7 +1,7 @@
 import { Router } from 'express'
 import { db } from '../db'
 import { promotions, brands } from '../db/schema'
-import { eq, like, and, gte, lte, sql } from 'drizzle-orm'
+import { eq, like, and, or, gte, lte, sql } from 'drizzle-orm'
 import { validateQuery } from '../middleware/validate'
 import { GetPromotionsQuerySchema } from '@promo/shared'
 import type { PaginatedResponse, PromotionWithBrand } from '@promo/shared'
@@ -13,7 +13,15 @@ promotionsRouter.get('/', validateQuery(GetPromotionsQuerySchema), async (req, r
     const { search, startDate, endDate, brand, page, pageSize } = req.query as any
 
     const conditions = []
-    if (search) conditions.push(like(promotions.name, `%${search}%`))
+    if (search) {
+      conditions.push(
+        or(
+          like(promotions.name, `%${search}%`),
+          like(promotions.description, `%${search}%`),
+          like(brands.name, `%${search}%`)
+        )
+      )
+    }
     if (startDate) conditions.push(gte(promotions.startDate, startDate))
     if (endDate) conditions.push(lte(promotions.endDate, endDate))
     if (brand) conditions.push(like(brands.name, `%${brand}%`))

@@ -8,6 +8,15 @@ interface Props {
 }
 
 export function PromoCard({ promo }: Props) {
+  const daysLeft =
+    promo.endDate && !isNaN(Date.parse(promo.endDate))
+      ? Math.ceil((new Date(promo.endDate).getTime() - Date.now()) / 86400000)
+      : null
+  const urgentBorder =
+    daysLeft !== null && daysLeft <= 7
+      ? 'border-t-2 border-t-orange-400'
+      : 'border-t-2 border-t-transparent'
+
   const endDateLabel = promo.endDate
     ? (() => {
         const d = new Date(promo.endDate)
@@ -23,7 +32,12 @@ export function PromoCard({ promo }: Props) {
     : null
 
   return (
-    <div className="border border-gray-200 rounded-xl overflow-hidden bg-white hover:shadow-md transition-shadow">
+    <a
+      href={promo.canonicalUrl}
+      target="_blank"
+      rel="noopener noreferrer"
+      className={`block border border-gray-200 rounded-xl overflow-hidden bg-white hover:shadow-md transition-shadow cursor-pointer no-underline text-inherit ${urgentBorder}`}
+    >
       {promo.imageUrl && (
         <div className="relative h-40 w-full bg-gray-100">
           <Image
@@ -40,6 +54,11 @@ export function PromoCard({ promo }: Props) {
         <p className="text-xs text-gray-500 font-medium uppercase tracking-wide mb-1">
           {promo.brand.name}
         </p>
+        {daysLeft !== null && daysLeft >= 0 && daysLeft <= 7 && (
+          <span className="inline-block bg-orange-100 text-orange-700 text-xs font-medium px-2 py-0.5 rounded-full mb-1">
+            Ends in {daysLeft === 0 ? 'today' : `${daysLeft}d`}
+          </span>
+        )}
         <h3 className="font-semibold text-gray-900 text-sm leading-snug mb-2">
           {promo.name}
         </h3>
@@ -50,16 +69,8 @@ export function PromoCard({ promo }: Props) {
           {endDateLabel && (
             <span className="text-xs text-gray-500">{endDateLabel}</span>
           )}
-          <a
-            href={promo.canonicalUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-xs text-blue-600 hover:underline ml-auto"
-          >
-            View offer →
-          </a>
         </div>
       </div>
-    </div>
+    </a>
   )
 }

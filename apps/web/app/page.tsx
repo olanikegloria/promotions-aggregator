@@ -78,35 +78,76 @@ export default function HomePage() {
         <p className="text-gray-500 text-sm">The Promenade Shops at Briargate</p>
       </div>
 
-      <div className="flex flex-col sm:flex-row gap-3 mb-6">
-        <input
-          type="text"
-          placeholder="Search promotions or brands..."
-          value={search}
-          onChange={e => { setSearch(e.target.value); setPage(1) }}
-          className="flex-1 border border-gray-300 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-        />
-        <input
-          type="date"
-          value={startDate}
-          onChange={e => { setStartDate(e.target.value); setPage(1) }}
-          className="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-        />
-        <input
-          type="date"
-          value={endDate}
-          onChange={e => { setEndDate(e.target.value); setPage(1) }}
-          className="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-        />
-        <button
-          onClick={() => setGrouped(g => !g)}
-          className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
-            grouped ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-          }`}
-        >
-          {grouped ? 'Grouped by brand' : 'Group by brand'}
-        </button>
+      <div className="sticky top-0 z-10 bg-white/95 backdrop-blur-sm border-b border-gray-100 -mx-4 px-4 py-3 mb-6">
+        <div className="flex flex-col sm:flex-row gap-3">
+          <div className="relative flex-1">
+            <input
+              type="text"
+              placeholder="Search promotions, brands, or descriptions..."
+              value={search}
+              onChange={e => { setSearch(e.target.value); setPage(1) }}
+              className="w-full border border-gray-300 rounded-lg pl-4 pr-8 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+            {search && (
+              <button
+                type="button"
+                onClick={() => { setSearch(''); setPage(1) }}
+                className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 text-lg leading-none"
+                aria-label="Clear search"
+              >
+                ×
+              </button>
+            )}
+          </div>
+          <input
+            type="date"
+            value={startDate}
+            onChange={e => { setStartDate(e.target.value); setPage(1) }}
+            className="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+          <input
+            type="date"
+            value={endDate}
+            onChange={e => { setEndDate(e.target.value); setPage(1) }}
+            className="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+          <button
+            type="button"
+            onClick={() => setGrouped(g => !g)}
+            className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+              grouped ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+            }`}
+          >
+            {grouped ? 'Grouped by brand' : 'Group by brand'}
+          </button>
+        </div>
       </div>
+
+      {(search || startDate || endDate) && (
+        <div className="flex gap-2 flex-wrap mb-4">
+          {search && (
+            <span className="flex items-center gap-1 bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-1 rounded-full">
+              Search: {search}
+              <button type="button" onClick={() => { setSearch(''); setPage(1) }} className="ml-1 hover:text-blue-600">×</button>
+            </span>
+          )}
+          {startDate && (
+            <span className="flex items-center gap-1 bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-1 rounded-full">
+              From: {startDate}
+              <button type="button" onClick={() => { setStartDate(''); setPage(1) }} className="ml-1 hover:text-blue-600">×</button>
+            </span>
+          )}
+          {endDate && (
+            <span className="flex items-center gap-1 bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-1 rounded-full">
+              To: {endDate}
+              <button type="button" onClick={() => { setEndDate(''); setPage(1) }} className="ml-1 hover:text-blue-600">×</button>
+            </span>
+          )}
+          <button type="button" onClick={clearFilters} className="text-xs text-gray-500 hover:text-gray-700 underline">
+            Clear all
+          </button>
+        </div>
+      )}
 
       {promos && !loading && (
         <p className="text-sm text-gray-500 mb-4">
