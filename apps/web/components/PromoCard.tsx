@@ -12,10 +12,8 @@ export function PromoCard({ promo }: Props) {
     promo.endDate && !isNaN(Date.parse(promo.endDate))
       ? Math.ceil((new Date(promo.endDate).getTime() - Date.now()) / 86400000)
       : null
-  const urgentBorder =
-    daysLeft !== null && daysLeft <= 7
-      ? 'border-t-2 border-t-orange-400'
-      : 'border-t-2 border-t-transparent'
+  const urgent =
+    daysLeft !== null && daysLeft >= 0 && daysLeft <= 7
 
   const endDateLabel = promo.endDate
     ? (() => {
@@ -23,11 +21,11 @@ export function PromoCard({ promo }: Props) {
         if (Number.isNaN(d.getTime())) {
           return promo.endDate
         }
-        return `Ends ${d.toLocaleDateString('en-US', {
+        return d.toLocaleDateString('en-US', {
           month: 'short',
           day: 'numeric',
           year: 'numeric',
-        })}`
+        })
       })()
     : null
 
@@ -36,40 +34,42 @@ export function PromoCard({ promo }: Props) {
       href={promo.canonicalUrl}
       target="_blank"
       rel="noopener noreferrer"
-      className={`block border border-gray-200 rounded-xl overflow-hidden bg-white hover:shadow-md transition-shadow cursor-pointer no-underline text-inherit ${urgentBorder}`}
+      className={`group flex gap-4 py-6 no-underline text-inherit hover:bg-stone-50/80 -mx-2 px-2 rounded-md transition-colors ${
+        urgent ? 'border-l-2 border-l-stone-400 pl-3' : ''
+      }`}
     >
-      {promo.imageUrl && (
-        <div className="relative h-40 w-full bg-gray-100">
+      {promo.imageUrl ? (
+        <div className="relative h-20 w-20 shrink-0 overflow-hidden rounded-sm bg-stone-100">
           <Image
             src={promo.imageUrl}
             alt={promo.name}
             fill
-            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-            className="object-cover"
+            sizes="80px"
+            className="object-cover opacity-90 group-hover:opacity-100 transition-opacity"
             onError={(e) => { (e.target as HTMLImageElement).style.display = 'none' }}
           />
         </div>
+      ) : (
+        <div className="h-20 w-20 shrink-0 rounded-sm bg-stone-100" aria-hidden />
       )}
-      <div className="p-4">
-        <p className="text-xs text-gray-500 font-medium uppercase tracking-wide mb-1">
-          {promo.brand.name}
-        </p>
-        {daysLeft !== null && daysLeft >= 0 && daysLeft <= 7 && (
-          <span className="inline-block bg-orange-100 text-orange-700 text-xs font-medium px-2 py-0.5 rounded-full mb-1">
-            Ends in {daysLeft === 0 ? 'today' : `${daysLeft}d`}
-          </span>
-        )}
-        <h3 className="font-semibold text-gray-900 text-sm leading-snug mb-2">
+      <div className="min-w-0 flex-1 pt-0.5">
+        <div className="flex items-baseline gap-2 flex-wrap">
+          <p className="text-[11px] uppercase tracking-wider text-stone-500">{promo.brand.name}</p>
+          {urgent && (
+            <span className="text-[10px] uppercase tracking-wider text-stone-500">
+              · soon
+            </span>
+          )}
+        </div>
+        <h3 className="font-normal text-base text-stone-900 leading-snug mt-1 group-hover:text-stone-700">
           {promo.name}
         </h3>
         {promo.description && (
-          <p className="text-xs text-gray-600 line-clamp-2 mb-3">{promo.description}</p>
+          <p className="text-sm text-stone-500 mt-1 line-clamp-2">{promo.description}</p>
         )}
-        <div className="flex items-center justify-between">
-          {endDateLabel && (
-            <span className="text-xs text-gray-500">{endDateLabel}</span>
-          )}
-        </div>
+        {endDateLabel && (
+          <p className="text-xs text-stone-400 mt-2 tabular-nums">{endDateLabel}</p>
+        )}
       </div>
     </a>
   )

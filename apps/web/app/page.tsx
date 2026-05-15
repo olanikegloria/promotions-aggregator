@@ -72,124 +72,130 @@ export default function HomePage() {
     : []
 
   return (
-    <main className="max-w-6xl mx-auto px-4 py-8">
-      <div className="mb-8">
-        <h1 className="text-2xl font-bold text-gray-900 mb-1">Promotions</h1>
-        <p className="text-gray-500 text-sm">The Promenade Shops at Briargate</p>
-      </div>
+    <main className="max-w-2xl mx-auto px-6 py-14">
+      <header className="border-b border-stone-200 pb-10 mb-0">
+        <h1 className="text-3xl font-light tracking-tight text-stone-900">Promotions</h1>
+        <p className="text-[11px] uppercase tracking-[0.2em] text-stone-500 mt-3">
+          The Promenade Shops at Briargate
+        </p>
+      </header>
 
-      <div className="sticky top-0 z-10 bg-white/95 backdrop-blur-sm border-b border-gray-100 -mx-4 px-4 py-3 mb-6">
-        <div className="flex flex-col sm:flex-row gap-3">
-          <div className="relative flex-1">
+      <div className="sticky top-0 z-10 bg-stone-50/95 border-b border-stone-200 -mx-6 px-6 py-5 mb-8">
+        <div className="flex flex-col gap-4">
+          <div className="relative">
             <input
               type="text"
-              placeholder="Search promotions, brands, or descriptions..."
+              placeholder="Search…"
               value={search}
               onChange={e => { setSearch(e.target.value); setPage(1) }}
-              className="w-full border border-gray-300 rounded-lg pl-4 pr-8 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full bg-white border border-stone-200 rounded-md pl-3 pr-8 py-2.5 text-sm text-stone-800 placeholder:text-stone-400 focus:outline-none focus:border-stone-800 transition-colors"
             />
             {search && (
               <button
                 type="button"
                 onClick={() => { setSearch(''); setPage(1) }}
-                className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 text-lg leading-none"
+                className="absolute right-2.5 top-1/2 -translate-y-1/2 text-stone-400 hover:text-stone-700 text-lg leading-none"
                 aria-label="Clear search"
               >
                 ×
               </button>
             )}
           </div>
-          <input
-            type="date"
-            value={startDate}
-            onChange={e => { setStartDate(e.target.value); setPage(1) }}
-            className="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
-          <input
-            type="date"
-            value={endDate}
-            onChange={e => { setEndDate(e.target.value); setPage(1) }}
-            className="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
-          <button
-            type="button"
-            onClick={() => setGrouped(g => !g)}
-            className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
-              grouped ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-            }`}
-          >
-            {grouped ? 'Grouped by brand' : 'Group by brand'}
-          </button>
+          <div className="flex flex-wrap items-center gap-3">
+            <input
+              type="date"
+              value={startDate}
+              onChange={e => { setStartDate(e.target.value); setPage(1) }}
+              className="flex-1 min-w-[8.5rem] bg-white border border-stone-200 rounded-md px-2 py-2 text-sm text-stone-800 focus:outline-none focus:border-stone-800"
+            />
+            <span className="text-stone-300 text-xs hidden sm:inline">—</span>
+            <input
+              type="date"
+              value={endDate}
+              onChange={e => { setEndDate(e.target.value); setPage(1) }}
+              className="flex-1 min-w-[8.5rem] bg-white border border-stone-200 rounded-md px-2 py-2 text-sm text-stone-800 focus:outline-none focus:border-stone-800"
+            />
+            <button
+              type="button"
+              onClick={() => setGrouped(g => !g)}
+              className={`text-[11px] uppercase tracking-wider px-3 py-2 rounded-md border transition-colors ${
+                grouped
+                  ? 'border-stone-900 bg-stone-900 text-white'
+                  : 'border-stone-300 text-stone-600 hover:border-stone-400 hover:bg-white'
+              }`}
+            >
+              {grouped ? 'By brand' : 'Group'}
+            </button>
+          </div>
         </div>
       </div>
 
       {(search || startDate || endDate) && (
-        <div className="flex gap-2 flex-wrap mb-4">
+        <div className="flex gap-2 flex-wrap items-center mb-8 -mt-2">
           {search && (
-            <span className="flex items-center gap-1 bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-1 rounded-full">
-              Search: {search}
-              <button type="button" onClick={() => { setSearch(''); setPage(1) }} className="ml-1 hover:text-blue-600">×</button>
+            <span className="inline-flex items-center gap-1.5 border border-stone-200 bg-white text-stone-600 text-xs px-2 py-1 rounded-md">
+              {search}
+              <button type="button" onClick={() => { setSearch(''); setPage(1) }} className="text-stone-400 hover:text-stone-800">×</button>
             </span>
           )}
           {startDate && (
-            <span className="flex items-center gap-1 bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-1 rounded-full">
-              From: {startDate}
-              <button type="button" onClick={() => { setStartDate(''); setPage(1) }} className="ml-1 hover:text-blue-600">×</button>
+            <span className="inline-flex items-center gap-1.5 border border-stone-200 bg-white text-stone-600 text-xs px-2 py-1 rounded-md">
+              {startDate}
+              <button type="button" onClick={() => { setStartDate(''); setPage(1) }} className="text-stone-400 hover:text-stone-800">×</button>
             </span>
           )}
           {endDate && (
-            <span className="flex items-center gap-1 bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-1 rounded-full">
-              To: {endDate}
-              <button type="button" onClick={() => { setEndDate(''); setPage(1) }} className="ml-1 hover:text-blue-600">×</button>
+            <span className="inline-flex items-center gap-1.5 border border-stone-200 bg-white text-stone-600 text-xs px-2 py-1 rounded-md">
+              {endDate}
+              <button type="button" onClick={() => { setEndDate(''); setPage(1) }} className="text-stone-400 hover:text-stone-800">×</button>
             </span>
           )}
-          <button type="button" onClick={clearFilters} className="text-xs text-gray-500 hover:text-gray-700 underline">
-            Clear all
+          <button type="button" onClick={clearFilters} className="text-xs text-stone-500 hover:text-stone-800">
+            Clear
           </button>
         </div>
       )}
 
       {promos && !loading && (
-        <p className="text-sm text-gray-500 mb-4">
+        <p className="text-xs text-stone-500 tabular-nums mb-8">
           {promos.total === 0
-            ? 'No promotions found.'
-            : `Showing ${(page - 1) * 20 + 1}–${Math.min(page * 20, promos.total)} of ${promos.total}`}
+            ? 'No results.'
+            : `${(page - 1) * 20 + 1}–${Math.min(page * 20, promos.total)} of ${promos.total}`}
         </p>
       )}
 
       {error && (
-        <div className="bg-red-50 border border-red-200 rounded-xl p-6 text-center">
-          <p className="text-red-700 text-sm">{error}</p>
-          <button onClick={() => window.location.reload()} className="mt-2 text-xs text-red-600 underline">
-            Try again
+        <div className="border border-stone-200 bg-white p-6 text-center mb-8">
+          <p className="text-stone-700 text-sm">{error}</p>
+          <button type="button" onClick={() => window.location.reload()} className="mt-3 text-xs text-stone-500 hover:text-stone-900">
+            Reload
           </button>
         </div>
       )}
 
       {loading && (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          {Array.from({ length: 6 }).map((_, i) => (
-            <div key={i} className="border border-gray-200 rounded-xl overflow-hidden animate-pulse">
-              <div className="h-40 bg-gray-200" />
-              <div className="p-4 space-y-2">
-                <div className="h-3 bg-gray-200 rounded w-1/3" />
-                <div className="h-4 bg-gray-200 rounded w-3/4" />
-                <div className="h-3 bg-gray-200 rounded" />
-              </div>
+        <div className="space-y-6">
+          {Array.from({ length: 5 }).map((_, i) => (
+            <div key={i} className="animate-pulse border-b border-stone-100 pb-6">
+              <div className="h-3 bg-stone-200 rounded w-24 mb-3" />
+              <div className="h-4 bg-stone-200 rounded max-w-md w-3/4 mb-2" />
+              <div className="h-3 bg-stone-100 rounded w-32" />
             </div>
           ))}
         </div>
       )}
 
       {!loading && !error && promos?.data.length === 0 && (
-        <div className="text-center py-16">
-          <p className="text-gray-500 text-sm mb-2">No promotions match your filters.</p>
-          <button onClick={clearFilters} className="text-blue-600 text-sm underline">Clear filters</button>
+        <div className="text-center py-20 border-t border-stone-100">
+          <p className="text-stone-500 text-sm">Nothing matches.</p>
+          <button type="button" onClick={clearFilters} className="mt-4 text-xs text-stone-600 hover:text-stone-900">
+            Reset filters
+          </button>
         </div>
       )}
 
       {!loading && !error && grouped && groupedByBrand.length > 0 && (
-        <div>
+        <div className="space-y-16">
           {groupedByBrand.map(({ brand, promotions }) => (
             <BrandSection key={brand.id} brand={brand} promotions={promotions} />
           ))}
@@ -197,41 +203,44 @@ export default function HomePage() {
       )}
 
       {!loading && !error && !grouped && promos && promos.data.length > 0 && (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="divide-y divide-stone-100 border-t border-stone-100">
           {promos.data.map(p => <PromoCard key={p.id} promo={p} />)}
         </div>
       )}
 
       {!loading && promos && promos.totalPages > 1 && (
-        <div className="flex items-center justify-center gap-2 mt-8">
+        <nav className="flex items-center justify-center gap-1 mt-12 pt-8 border-t border-stone-200 text-sm text-stone-600">
           <button
+            type="button"
             onClick={() => setPage(p => Math.max(1, p - 1))}
             disabled={page === 1}
-            className="px-3 py-1.5 text-sm border border-gray-300 rounded-lg disabled:opacity-40 hover:bg-gray-50"
+            className="px-2 py-1 disabled:opacity-30 hover:text-stone-900"
           >
-            ← Prev
+            ←
           </button>
           {Array.from({ length: promos.totalPages }, (_, i) => i + 1)
             .filter(p => Math.abs(p - page) <= 2)
             .map(p => (
               <button
+                type="button"
                 key={p}
                 onClick={() => setPage(p)}
-                className={`px-3 py-1.5 text-sm border rounded-lg ${
-                  p === page ? 'bg-blue-600 text-white border-blue-600' : 'border-gray-300 hover:bg-gray-50'
+                className={`min-w-[2rem] px-2 py-1 rounded ${
+                  p === page ? 'text-stone-900 font-medium' : 'hover:text-stone-900'
                 }`}
               >
                 {p}
               </button>
             ))}
           <button
+            type="button"
             onClick={() => setPage(p => Math.min(promos.totalPages, p + 1))}
             disabled={page === promos.totalPages}
-            className="px-3 py-1.5 text-sm border border-gray-300 rounded-lg disabled:opacity-40 hover:bg-gray-50"
+            className="px-2 py-1 disabled:opacity-30 hover:text-stone-900"
           >
-            Next →
+            →
           </button>
-        </div>
+        </nav>
       )}
     </main>
   )

@@ -18,17 +18,18 @@ export const metadata: Metadata = {
   description: "Browse sales and promotions from The Promenade Shops at Briargate",
 };
 
+export const viewport = {
+  colorScheme: "light" as const,
+};
+
 export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
   return (
-    <html
-      lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
-    >
-      <body className="min-h-full flex flex-col">
+    <html lang="en" className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}>
+      <body className="min-h-full flex flex-col bg-stone-50 text-stone-900 font-sans">
         <Suspense>{children}</Suspense>
       </body>
     </html>
